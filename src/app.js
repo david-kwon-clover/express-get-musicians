@@ -38,6 +38,15 @@ app.post("/musicians", async (req, res, next) => {
     }
 })
 
+app.put("/musicians/:id", async (req, res, next) => {
+    try {
+        await Musician.update(req.body, { where: { id: req.params.id } });
+        res.send(`Successfully updated musician at id:${req.params.id}`);
+    } catch(error) {
+        next(error);
+    }
+})
+
 
 app.get("/bands", async (req, res, next) => {
     try {
