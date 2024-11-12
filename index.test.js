@@ -22,11 +22,20 @@ describe('/musicians endpoint', () => {
         const response = await request(app).get("/musicians");
         const responseData = JSON.parse(response.text);
         expect(Object.values(responseData[1])).toContain("Drake");
+    }) 
+})
+
+describe('/bands endpoint', () => {
+    // Write your tests here
+    test("Test response status", async () => {
+        // Sends request to `/bakedGoods` endpoint
+        const response = await request(app).get("/bands");
+        expect(response.statusCode).toBe(200);
     })
     
-
-
-
-
-    
+    test("Test response data", async () => {
+        const response = await request(app).get("/bands");
+        const responseData = JSON.parse(response.text);
+        expect(Object.values(responseData[1])).toContain("Black Pink");
+    }) 
 })
