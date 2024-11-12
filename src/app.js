@@ -47,6 +47,14 @@ app.put("/musicians/:id", async (req, res, next) => {
     }
 })
 
+app.delete("/musicians/:id", async (req, res, next) => {
+    try {
+        await Musician.destroy({ where: { id: req.params.id } });
+        res.send(`Successfully deleted musician with id:${req.params.id}`);
+    } catch(error) {
+        next(error);
+    }
+})
 
 app.get("/bands", async (req, res, next) => {
     try {
