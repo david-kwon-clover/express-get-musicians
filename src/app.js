@@ -18,7 +18,10 @@ app.get("/musicians", async (req, res, next) => {
 
 app.get("/musicians/:id", async (req, res, next) => {
     try {
-        const musician = await Musician.findOne({ where:  { id: req.params.id } });
+        const musician = await Musician.findByPk(req.params.id);
+        if(!musician) {
+            throw new Error(`Could not find musician with id:${req.params.id}`);
+        }
         res.json(musician);
     } catch(error) {
         next(error);
