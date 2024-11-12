@@ -10,10 +10,10 @@ const app = require('./src/app');
 const {seedMusician} = require("./seedData");
 
 
+
 describe('/musicians endpoint', () => {
     // Write your tests here
     test("Test response status", async () => {
-        // Sends request to `/bakedGoods` endpoint
         const response = await request(app).get("/musicians");
         expect(response.statusCode).toBe(200);
     })
@@ -28,7 +28,6 @@ describe('/musicians endpoint', () => {
 describe('/musicians/:id endpoint', () => {
     // Write your tests here
     test("Test response status", async () => {
-        // Sends request to `/bakedGoods` endpoint
         const response = await request(app).get("/musicians/1");
         expect(response.statusCode).toBe(200);
     })
@@ -43,7 +42,6 @@ describe('/musicians/:id endpoint', () => {
 describe('/bands endpoint', () => {
     // Write your tests here
     test("Test response status", async () => {
-        // Sends request to `/bakedGoods` endpoint
         const response = await request(app).get("/bands");
         expect(response.statusCode).toBe(200);
     })
