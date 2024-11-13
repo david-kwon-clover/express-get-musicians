@@ -25,9 +25,11 @@ musiciansRouter.get("/:id", async (req, res, next) => {
     }
 })
 
-musiciansRouter.post("", [
+musiciansRouter.post("/", [
     check("name").trim().notEmpty().withMessage("name cannot be empty"),
     check("instrument").trim().notEmpty().withMessage("instrument cannot be empty"),
+    check("name").isLength({ min: 2, max: 20 }).withMessage("name must be within 2-20 characters long"),
+    check("instrument").isLength({ min: 2, max: 20 }).withMessage("instrument must be within 2-20 characters long")
 ], async (req, res, next) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()) {
@@ -39,7 +41,12 @@ musiciansRouter.post("", [
     }
 })
 
-musiciansRouter.put("/:id", async (req, res, next) => {
+musiciansRouter.put("/:id", [
+    check("name").trim().notEmpty().withMessage("name cannot be empty"),
+    check("instrument").trim().notEmpty().withMessage("instrument cannot be empty"),
+    check("name").isLength({ min: 2, max: 20 }).withMessage("name must be within 2-20 characters long"),
+    check("instrument").isLength({ min: 2, max: 20 }).withMessage("instrument must be within 2-20 characters long")
+], async (req, res, next) => {
     try {
         await Musician.update(req.body, { where: { id: req.params.id } });
         res.send(`Successfully updated musician at id:${req.params.id}`);
