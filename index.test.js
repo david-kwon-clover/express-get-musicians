@@ -1,8 +1,7 @@
 // install dependencies
 const { execSync } = require('child_process');
 execSync('npm install');
-execSync('npm run seed');
-const { describe, test, expect, afterAll, afterEach } = require("@jest/globals");
+const { describe, test, expect, afterAll, afterEach, beforeEach } = require("@jest/globals");
 const request = require("supertest")
 const { db } = require('./db/connection');
 const { Musician } = require('./models/index')
@@ -11,7 +10,9 @@ const {seedMusician} = require("./seedData");
 
 
 describe("Musician", () => {
-    
+    beforeEach(() => {
+        execSync('npm run seed');
+    })
     describe('/musicians GET endpoint', () => {
         // Write your tests here
         test("Test response status", async () => {
@@ -56,9 +57,22 @@ describe("Musician", () => {
                 instrument: "Guitar"
             });
             const allMusicians = await Musician.findAll();
-            expect(allMusicians).toHaveLength(5);
-            expect(allMusicians[4].name).toBe("John Mayer");
+            expect(allMusicians).toHaveLength(4);
+            expect(allMusicians[allMusicians.length - 1].name).toBe("John Mayer");
         }) 
+        
+        test("Server side validation", async () => {
+            const responseNoName = await request(app).post("/musicians").send({
+                name: "",
+                instrument: "Guitar"
+            });
+            const responseNoInstrument = await request(app).post("/musicians").send({
+                name: "John Mayer",
+                instrument: ""
+            });
+            expect(responseNoName.body.error[0].msg).toBe("name cannot be empty");
+            expect(responseNoInstrument.body.error[0].msg).toBe("instrument cannot be empty");
+        })
     })
 
     describe("/musicians/:id PUT endpoint", () => {
@@ -85,8 +99,7 @@ describe("Musician", () => {
             });
             await request(app).delete("/musicians/4")
             const allMusicians = await Musician.findAll();
-            expect(allMusicians[3].name).toBeUndefined;
-            expect(allMusicians[3].instrument).toBeUndefined;
+            expect(allMusicians[3]).toBeUndefined();
         })
     })
     
