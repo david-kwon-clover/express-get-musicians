@@ -47,12 +47,13 @@ musiciansRouter.put("/:id", [
     check("name").isLength({ min: 2, max: 20 }).withMessage("name must be within 2-20 characters long"),
     check("instrument").isLength({ min: 2, max: 20 }).withMessage("instrument must be within 2-20 characters long")
 ], async (req, res, next) => {
-    try {
-        await Musician.update(req.body, { where: { id: req.params.id } });
-        res.send(`Successfully updated musician at id:${req.params.id}`);
-    } catch(error) {
-        next(error);
-    }
+   const errors = validationResult(req);
+   if(!errors.isEmpty()) {
+    res.json({error: errors.array()})
+   } else {
+    const updatedMusician = await Musician.update(req.body, {where: {id: req.params.id}});
+    res.json(updatedMusician);
+   }
 })
 
 musiciansRouter.delete("/:id", async (req, res, next) => {
