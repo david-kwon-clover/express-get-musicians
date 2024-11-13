@@ -91,6 +91,7 @@ describe("Musician", () => {
     })
     
 })
+
 describe('/bands endpoint', () => {
     // Write your tests here
     test("Test response status", async () => {
