@@ -70,11 +70,16 @@ describe("Musician", () => {
                 name: "John Mayer",
                 instrument: ""
             });
+            const responseBadLength = await request(app).post("/musicians").send({
+                name: "J",
+                instrument: "Flute"
+            });
             expect(responseNoName.body.error[0].msg).toBe("name cannot be empty");
             expect(responseNoInstrument.body.error[0].msg).toBe("instrument cannot be empty");
+            expect(responseBadLength.body.error[0].msg).toBe("name must be within 2-20 characters long");
         })
     })
-
+    
     describe("/musicians/:id PUT endpoint", () => {
         test("Test update functionality", async () => {
             await request(app).post("/musicians").send({
@@ -88,6 +93,18 @@ describe("Musician", () => {
             const allMusicians = await Musician.findAll();
             expect(allMusicians[3].name).toBe("Stevie Wonder");
             expect(allMusicians[3].instrument).toBe("Keyboard");
+        })
+        
+        test("Server side validation", async () => {
+            await request(app).post("/musicians").send({
+                name: "John Mayer",
+                instrument: "Guitar"
+            });
+            const response = await request(app).put("/musicians/4").send({
+                name: "Stevie Wonder",
+                instrument: "Keyboard of the Gods with Keys made of Gold"
+            })
+            expect(response.body.error[0].msg).toBe("instrument must be within 2-20 characters long");
         })
     })
 
