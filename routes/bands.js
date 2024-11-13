@@ -1,12 +1,21 @@
 const express = require("express");
-const { Band } = require("../models/index");
+const { Band, Musician } = require("../models/index");
 
 const bandsRouter = express.Router();
 
-bandsRouter.get("/bands", async (req, res, next) => {
+bandsRouter.get("/", async (req, res, next) => {
     try {
         const bands = await Band.findAll();
         res.json(bands);
+    } catch(error) {
+        next(error);
+    }
+})
+
+bandsRouter.get("/:id", async (req, res, next) => {
+    try {
+        const targetBand = await Band.findByPk(req.params.id, { include: Musician });
+        res.json(targetBand);
     } catch(error) {
         next(error);
     }
