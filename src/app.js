@@ -1,6 +1,5 @@
 const express = require("express");
 const app = express();
-const { Musician } = require("../models/index")
 const { Band } = require("../models/index");
 const { db } = require("../db/connection")
 app.use(express.json());
@@ -64,9 +63,6 @@ app.get("/bands", async (req, res, next) => {
         next(error);
     }
 })
-
-
-
 
 
 module.exports = app;
