@@ -92,16 +92,36 @@ describe("Musician", () => {
     
 })
 
-describe('/bands endpoint', () => {
-    // Write your tests here
-    test("Test response status", async () => {
-        const response = await request(app).get("/bands");
-        expect(response.statusCode).toBe(200);
+describe("Band", () => {
+    describe('/bands GET endpoint', () => {
+        // Write your tests here
+        test("Test response status", async () => {
+            const response = await request(app).get("/bands");
+            expect(response.statusCode).toBe(200);
+        })
+        
+        test("/bands GET response data", async () => {
+            const response = await request(app).get("/bands");
+            const responseData = JSON.parse(response.text);
+            expect(Object.values(responseData[1])).toContain("Black Pink");
+        }) 
     })
-    
-    test("Test response data", async () => {
-        const response = await request(app).get("/bands");
-        const responseData = JSON.parse(response.text);
-        expect(Object.values(responseData[1])).toContain("Black Pink");
-    }) 
+
+    describe('/bands/:id GET endpoint', () => {
+        // Write your tests here
+        test("Test response status", async () => {
+            const response = await request(app).get("/bands/2");
+            expect(response.statusCode).toBe(200);
+        })
+        
+        test("/bands/:id GET response data", async () => {
+            const response = await request(app).get("/bands/2");
+            const responseData = JSON.parse(response.text);
+            expect(Object.values(responseData)).toContain("Black Pink");
+            expect(Object.keys(responseData)).toContain("musicians");
+            expect(responseData.musicians).toBeInstanceOf(Array);
+        }) 
+    })
+
 })
+
